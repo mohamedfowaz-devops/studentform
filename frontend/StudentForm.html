@@ -65,89 +65,64 @@
 				cArr=[]
 				dArr=[]
 				eArr=[]
-		function Add(){
-				name=document.getElementById("exampleName").value;
-				email=document.getElementById("exampleMail").value;
-				a=document.getElementById("TamizhMark").value;
-				b=document.getElementById("EnglishMark").value;
-				c=document.getElementById("MathsMark").value;
-				d=document.getElementById("ScienceMark").value;
-				e=document.getElementById("SocialMark").value;
-				nameArr.push(name);
-				emailArr.push(email);
-				aArr.push(a);
-				bArr.push(b);
-				cArr.push(c);
-				dArr.push(d);
-				eArr.push(e);
-				document.getElementById("exampleName").value="";
-				document.getElementById("exampleMail").value="";
-				document.getElementById("TamizhMark").value="";
-				document.getElementById("EnglishMark").value="";
-				document.getElementById("MathsMark").value="";
-				document.getElementById("ScienceMark").value="";
-				document.getElementById("SocialMark").value="";
+		async function Add() {
 
-		}
+  const studentData = {
+    name: document.getElementById("exampleName").value,
+    email: document.getElementById("exampleMail").value,
+    tamil: document.getElementById("TamizhMark").value,
+    english: document.getElementById("EnglishMark").value,
+    maths: document.getElementById("MathsMark").value,
+    science: document.getElementById("ScienceMark").value,
+    social: document.getElementById("SocialMark").value
+  };
 
-		function View(){
+  const response = await fetch("http://localhost:3000/students", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(studentData)
+  });
 
-			tableview="<center><table border='1'><tbody>";
-				tableview+="<tr><th>"+"S.no"+"</th>" +" <th>"+"Name"+"</th><th>"+"Email"+"</th>" +" <th>"+"Tamil Mark"+"</th> <th>"+"English Mark"+"</th>" +" <th>"+"Maths Mark"+"</th><th>"+"Science Mark"+"</th>" +" <th>"+"Social Mark"+"</th><th>"+"Total"+"</th> <th>"+"Average"+"</th> <th>"+"Pass or Fail"+"</th><th>"+"Grade"+"</th><th>"+"Action"+"</th> </tr>"
-			
-				len=nameArr.length
-			for(i=0;i<len;i++){				
-				j=i+1;
-				totalvalue=parseInt(aArr[i])+parseInt(bArr[i])+parseInt(cArr[i])+parseInt(dArr[i])+parseInt(eArr[i]);
-				Avevalue=totalvalue/5;
-				passorfail=" ";
-				grade=" ";
+  const result = await response.json();
 
-				if(aArr[i]>=35 && bArr[i]>=35 && cArr[i]>=35 && dArr[i]>=35 && eArr[i]>=35)
-				{
-					passorfail+="Pass";
-				}
-				else{
-					passorfail+="Fail";
-				}
+  alert("Student Added");
 
-				if(aArr[i]>90 && bArr[i]>90 && cArr[i]>90 && dArr[i]>90 && eArr[i]>90){
-					grade+="O+";
-				}
-				else if(aArr[i]>80 && bArr[i]>80 && cArr[i]>80 && dArr[i]>80 && eArr[i]>80){
-					grade+="A+"; 
-				}
-				else if(aArr[i]>70 && bArr[i]>70 && cArr[i]>70 && dArr[i]>70 && eArr[i]>70){
-					grade+="A";
-				}
-				else if(aArr[i]>60 && bArr[i]>60 && cArr[i]>60 && dArr[i]>60 && eArr[i]>60){
-					grade+="B+";
-				}
-				else if(aArr[i]>50 && bArr[i]>50 && cArr[i]>50 && dArr[i]>50 && eArr[i]>50){
-					grade+="C";
-				}
-				else if(aArr[i]>40 && bArr[i]>40 && cArr[i]>40 && dArr[i]>40 && eArr[i]>40){
-					grade+="D";
-				}
-				
-				else if(aArr[i]>35 && bArr[i]>35 && cArr[i]>35 && dArr[i]>35 && eArr[i]>35){
-					grade+="E";
-				}
-				else{
-					grade+="F";
-				}
+}
 
-					tableview+="<tr><td>"+j+"</td><td>"+nameArr[i]+"</td><td>"+emailArr[i]+"</td><td>"+aArr[i]+"</td><td>"+bArr[i]+"</td><td>"+cArr[i]+"</td><td>"+dArr[i]+"</td><td>"+eArr[i]+"</td><td>"+totalvalue+"</td><td>"+Avevalue+"</td><td>"+passorfail+"</td><td>"+grade+"</td> <td>"+"<button type='button' class='btn btn-primary' onclick='Edit("+i+")'>Edit</button> "+"<button type='button' class='btn btn-danger' onclick='Delete("+i+")'>Delete</button>"+"<button type='button' class='btn btn-warning' onclick='update("+i+")'>update</button></td> </tr>"
+		
 
+		async function View() {
 
-			}
-			
-			tableview+="</tbody></table></center>";
-			
-	
-			document.getElementById("res").innerHTML=tableview;	
+  const response = await fetch("http://localhost:3000/students");
 
-		}
+  const students = await response.json();
+
+  let tableview = "<center><table border='1'><tbody>";
+
+  tableview += "<tr><th>Name</th><th>Email</th><th>Tamil</th><th>English</th><th>Maths</th><th>Science</th><th>Social</th></tr>";
+
+  students.forEach(student => {
+
+    tableview += `
+      <tr>
+        <td>${student.name}</td>
+        <td>${student.email}</td>
+        <td>${student.tamil}</td>
+        <td>${student.english}</td>
+        <td>${student.maths}</td>
+        <td>${student.science}</td>
+        <td>${student.social}</td>
+      </tr>
+    `;
+
+  });
+
+  tableview += "</tbody></table></center>";
+
+  document.getElementById("res").innerHTML = tableview;
+}
 		function Edit(i){
 				//output=[nameArr[i],emailArr[i],aArr[i],bArr[i],cArr[i],dArr[i],eArr[i]]
 				document.getElementById("exampleName").value=nameArr[i];
